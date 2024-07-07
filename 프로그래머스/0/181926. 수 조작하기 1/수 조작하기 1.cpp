@@ -1,14 +1,12 @@
 #include <string>
 #include <vector>
+#include <map>
 
 using namespace std;
+map <char, int> m = {{'w', 1}, {'s', -1}, {'d', 10}, {'a', -10}};
 
 int solution(int n, string control) {
-    for (char c : control){
-        if (c=='w') n += 1;
-        else if (c=='s') n -= 1;
-        else if (c=='d') n += 10;
-        else if (c=='a') n -= 10;
-    }
+    for (char c : control)
+        n += m[c];
     return n;
 }
