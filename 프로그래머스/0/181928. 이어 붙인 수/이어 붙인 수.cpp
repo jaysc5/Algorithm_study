@@ -6,8 +6,8 @@ using namespace std;
 int solution(vector<int> num_list) {
     string even = "", odd = "";
     
-    for(int i=0; i<num_list.size(); i++)
-        num_list[i]%2==0 ? even += to_string(num_list[i]) : odd += to_string(num_list[i]);
+    for(int num : num_list)
+        num%2==0 ? even += to_string(num) : odd += to_string(num);
     
     return stoi(even) + stoi(odd);
 }
