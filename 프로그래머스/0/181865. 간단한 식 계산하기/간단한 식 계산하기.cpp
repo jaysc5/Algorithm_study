@@ -5,7 +5,6 @@
 using namespace std;
 
 int solution(string binomial) {
-    int answer = 0;
     int a, b;
     char op;
     stringstream ss(binomial);
