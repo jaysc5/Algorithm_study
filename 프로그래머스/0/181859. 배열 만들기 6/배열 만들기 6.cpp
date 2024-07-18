@@ -7,7 +7,7 @@ vector<int> solution(vector<int> arr) {
     vector<int> stk;
     for (int i=0; i<arr.size(); i++){
         if (stk.empty()) stk.push_back(arr[i]);
-        else if (!stk.empty() & stk.back()==arr[i]) stk.erase(stk.end()-1);
+        else if (!stk.empty() & stk.back()==arr[i]) stk.pop_back();
         else if (!stk.empty() & stk.back()!=arr[i]) stk.push_back(arr[i]);
     }
     if (stk.empty()) return {-1};
