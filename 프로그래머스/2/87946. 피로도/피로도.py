@@ -1,19 +1,14 @@
-answer = 0
 def solution(k, dungeons):
-    visited = []
+    answer = -1
+    visited = [0] * len(dungeons)
     
     def dfs(k, clear): #피로도, 클리어
-        global answer
-        answer = max(answer, clear)
-        
+        print(visited)
         for idx, dungeon in enumerate(dungeons):
-            if idx in visited:
-                continue
-            if k < dungeon[0]:
-                continue
-                
-            visited.append(idx)
-            dfs(k-dungeon[1], clear+1)
-            visited.pop()
+            print(idx, dungeon)
+            if not visited[idx]:
+                visited[idx] = 1
+                dfs(k-dungeon[1], clear+1)
+                visited[idx] = 0
     dfs(k, 0)
     return answer
