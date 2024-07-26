@@ -19,7 +19,8 @@ def solution(maps):
         x, y, distance = queue.popleft()
         if (x, y) == (end_x, end_y):
             answer = distance
-        
+            break
+            
         for d in range(4):
             nx = x + dx[d]
             ny = y + dy[d]
