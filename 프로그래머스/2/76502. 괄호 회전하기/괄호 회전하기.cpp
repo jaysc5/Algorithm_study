@@ -2,10 +2,10 @@
 #include <vector>
 #include <iostream>
 #include <stack>
-#include <map>
+#include <unordered_map>
 
 using namespace std;
-map<char, char> bracket = {{'}','{'}, {')', '('}, {']', '['}};
+unordered_map<char, char> bracket = {{'}','{'}, {')', '('}, {']', '['}};
 
 int solution(string s) {
     int answer = 0;
