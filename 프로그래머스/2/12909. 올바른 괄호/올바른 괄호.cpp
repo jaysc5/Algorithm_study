@@ -1,24 +1,18 @@
 #include<string>
 #include <iostream>
-#include <stack>
 
 using namespace std;
 
 bool solution(string s)
 {
-    stack<char> stk;
-    
+    int n = 0;
     for (char c : s){
-        if (stk.empty()){
-            if (c == ')') return false;
-            stk.push(c);
-        }
-        else {
-            if (stk.top() == '(' and c == ')') stk.pop();
-            else if (stk.top() == '(' and c == '(') stk.push(c);
-            else return false;
-        }
+        if (n < 0)
+            return false;
+        if (c == '(')
+            n++;
+        else if (c == ')')
+            n--;
     }
-
-    return stk.empty();
+    return n == 0;
 }
