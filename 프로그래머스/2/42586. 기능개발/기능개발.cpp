@@ -1,6 +1,5 @@
 #include <string>
 #include <vector>
-#include <iostream>
 using namespace std;
 
 vector<int> solution(vector<int> progresses, vector<int> speeds) {
@@ -11,7 +10,6 @@ vector<int> solution(vector<int> progresses, vector<int> speeds) {
     for (int i = 0; i < progresses.size(); ++i)
     {
         day = (99 - progresses[i]) / speeds[i] + 1;
-        cout << day << endl;
         
         if (answer.empty() || max_day < day)
             answer.push_back(1);
