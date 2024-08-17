@@ -10,7 +10,7 @@ vector<int> solution(int n, vector<string> words) {
     
     for (int i=0; i<words.size()-1; i++){
         if (wordgame.find(words[i]) == wordgame.end()){
-            if (words[i][words[i].size()-1]==words[i+1][0])
+            if (words[i].back()==words[i+1].front())
                 wordgame[words[i]] = words[i+1];
             else
                 return vector<int>{(i+1)%n+1, (i+1)/n+1};
