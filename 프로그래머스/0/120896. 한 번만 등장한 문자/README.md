@@ -1,10 +1,10 @@
 # [level 0] 한 번만 등장한 문자 - 120896 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/120896) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/120896?language=cpp) 
 
 ### 성능 요약
 
-메모리: 10.1 MB, 시간: 0.03 ms
+메모리: 3.68 MB, 시간: 0.02 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 07월 27일 17:06:45
+2024년 08월 28일 20:43:32
 
 ### 문제 설명
 
