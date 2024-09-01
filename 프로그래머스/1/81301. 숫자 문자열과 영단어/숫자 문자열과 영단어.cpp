@@ -1,29 +1,17 @@
 #include <string>
-#include <vector>
-#include <unordered_map>
-#include <algorithm>
+#include <regex>
 
 using namespace std;
 
 int solution(string s) {
-    vector<string> digit = {"0","1","2","3","4","5","6","7","8","9"};
-    vector<string> word = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
-    unordered_map<string, string> m;
-    string st = "";
-    string answer = "";
-    for (int i=0; i<digit.size(); i++) m.insert({word[i], digit[i]});
-    
-    for (int i = 0; i < s.length();i++){
-        st.push_back(s[i]);
-        if (find(digit.begin(), digit.end(), st) != digit.end()) {
-            answer += st;
-            st="";
-        } 
-        
-        if(m.find(st) != m.end()) {
-            answer += m[st];
-            st="";
-        }
-    }
-    return stoi(answer);
-}
+    s = regex_replace(s, regex("zero"), "0");
+    s = regex_replace(s, regex("one"), "1");
+    s = regex_replace(s, regex("two"), "2");
+    s = regex_replace(s, regex("three"), "3");
+    s = regex_replace(s, regex("four"), "4");
+    s = regex_replace(s, regex("five"), "5");
+    s = regex_replace(s, regex("six"), "6");
+    s = regex_replace(s, regex("seven"), "7");
+    s = regex_replace(s, regex("eight"), "8");
+    s = regex_replace(s, regex("nine"), "9");    
+    return stoi(s);}
