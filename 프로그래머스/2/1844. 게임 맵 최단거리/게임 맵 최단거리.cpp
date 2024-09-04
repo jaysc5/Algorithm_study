@@ -6,40 +6,36 @@ using namespace std;
 const int MAX_SIZE = 100;
 const int dx[4] = {-1, 0, 1, 0};
 const int dy[4] = {0, 1, 0, -1};
+int n, m;
 int check[MAX_SIZE][MAX_SIZE];
 
-struct Point {
-    int x, y;
-    
-    Point(int x, int y) : x(x), y(y) {}
-    
-    bool isValid(int n, int m) { return 0 <= x && x < n && 0 <= y && y < m; }
-    
-    Point move(int i) const { return Point(x+dx[i], y+dy[i]); }
-    
-    bool canMoveTo(const vector<vector<int>> &maps) const { return maps[x][y] == 1 && check[x][y] == 0; }
-};
+bool isWithinRange(int x, int y) { return 0 <= x && x < n && 0 <= y && y < m; }
 
-queue<Point> q;
+queue<pair<int, int>> q;
 
 int solution(vector<vector<int> > maps)
 {
-    int n = maps.size();
-    int m = maps[0].size();
+    n = maps.size(), m = maps[0].size();
     int end_x = n-1, end_y = m-1;
 
     q.push({0, 0});
     check[0][0] = 1;
     
     while (!q.empty()) {
-        Point cur = q.front();
+        auto cur = q.front();
         q.pop();
+        
+        if(cur.first == end_x && cur.second == end_y) {
+            return check[end_x][end_y];
+        }
 
         for (int i=0; i<4; i++) {
-            Point next = cur.move(i);
-            if (next.isValid(n, m) && next.canMoveTo(maps)) {
-                check[next.x][next.y] = check[cur.x][cur.y] + 1;
-                q.push({next.x, next.y});
+            int nx = cur.first + dx[i];
+            int ny = cur.second + dy[i];
+            
+            if (isWithinRange(nx, ny) && maps[nx][ny] == 1 && check[nx][ny] == 0) {
+                check[nx][ny] = check[cur.first][cur.second] + 1;
+                q.push({nx, ny});
             }
         }
     }
