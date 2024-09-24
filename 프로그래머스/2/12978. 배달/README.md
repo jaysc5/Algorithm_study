@@ -1,10 +1,10 @@
 # [level 2] 배달 - 12978 
 
-[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12978) 
+[문제 링크](https://school.programmers.co.kr/learn/courses/30/lessons/12978?language=cpp) 
 
 ### 성능 요약
 
-메모리: 10.5 MB, 시간: 1.49 ms
+메모리: 4.14 MB, 시간: 0.36 ms
 
 ### 구분
 
@@ -16,7 +16,7 @@
 
 ### 제출 일자
 
-2024년 08월 15일 00:19:02
+2024년 09월 24일 18:53:08
 
 ### 문제 설명
 
