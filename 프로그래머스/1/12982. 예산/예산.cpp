@@ -11,7 +11,7 @@ int solution(vector<int> d, int budget) {
     sort(d.begin(), d.end());
     
     for (auto cash : d) {
-        if (budget < cash) return answer;
+        if (budget < cash) break;
         budget -= cash;
         answer++;
     }
