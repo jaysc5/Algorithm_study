@@ -5,26 +5,16 @@
 using namespace std;
 
 vector<int> solution(vector<int> numbers) {
-    vector<int> answer(numbers.size());
+    vector<int> answer(numbers.size(), -1);
     stack<int> stk;
-    
-    for(int i=numbers.size()-1;i>=0;i--)
-    {
-        while(1)
-        {
-            if(stk.empty())
-            {
-                answer[i] = -1;
-                break;
-            }
-            if(stk.top()>numbers[i])
-            {
-                answer[i] = stk.top();
-                break;
-            }
+
+    for(int i=0; i<numbers.size(); i++) {
+        while(!stk.empty() && numbers[stk.top()] < numbers[i]) {
+            answer[stk.top()] = numbers[i];
             stk.pop();
         }
-        stk.push(numbers[i]);
+        stk.push(i);
     }
+
     return answer;
 }
