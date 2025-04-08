@@ -650,8 +650,9 @@ int main()
         pii warriorResult = moveWarriors(currentX, currentY, N, M);
 
         // 결과 출력: 이동한 전사 수, 시야 커버리지, 플레이어에게 도달한 전사 수
-        cout << warriorResult.] << " " << sightCoverage << " " << warriorResult.second << "\n";
+        cout << warriorResult.first << " " << sightCoverage << " " << warriorResult.second << "\n";
     }
 
     return 0;
 }
+
