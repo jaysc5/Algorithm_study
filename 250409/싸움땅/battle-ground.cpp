@@ -16,9 +16,9 @@ int dx[4] = { -1,0,1,0 };
 int dy[4] = { 0,1,0,-1 };
 
 int N, M, K;
-int gunMap[20][20]; // 0(없음) 1(있음)
+//int gunMap[20][20]; // 0(없음) 1(있음)
 vector<vector<int>> gun_in_map;
-vector<vector<int>> player_in_map;
+//vector<vector<int>> player_in_map;
 
 int playerMap[20][20]; // -1(없음) 0~M-1 player index
 vector<Info> playersInfo;
@@ -28,7 +28,7 @@ void getGun(int i) {
     int nx = nowPlayer.x;
     int ny = nowPlayer.y;
 
-    if (gunMap[nx][ny] == 1) {
+    if (gun_in_map[nx * N + ny].size() > 0) {
         if (!gun_in_map[N * nx + ny].empty()) {
             gun_in_map[N * nx + ny].push_back(nowPlayer.gun);
             sort(gun_in_map[N * nx + ny].begin(), gun_in_map[N * nx + ny].end());
@@ -159,10 +159,11 @@ int main() {
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             playerMap[i][j] = -1;
-            cin >> gunMap[i][j];
-            if (gunMap[i][j] != 0) {
-                gun_in_map[N * i + j].push_back(gunMap[i][j]);
-                gunMap[i][j] = 1;
+            
+            int tmp;
+            cin >> tmp;
+            if (tmp != 0) {
+                gun_in_map[N * i + j].push_back(tmp);
             }
         }
     }
