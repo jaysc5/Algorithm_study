@@ -8,7 +8,6 @@ struct Info {
     int x, y, d;
     int initpower;
     int gun;
-    bool winning;
     int point;
 };
 
@@ -16,10 +15,7 @@ int dx[4] = { -1,0,1,0 };
 int dy[4] = { 0,1,0,-1 };
 
 int N, M, K;
-//int gunMap[20][20]; // 0(없음) 1(있음)
 vector<vector<int>> gun_in_map;
-//vector<vector<int>> player_in_map;
-
 int playerMap[20][20]; // -1(없음) 0~M-1 player index
 vector<Info> playersInfo;
 
@@ -29,42 +25,30 @@ void getGun(int i) {
     int ny = nowPlayer.y;
 
     if (gun_in_map[nx * N + ny].size() > 0) {
-        if (!gun_in_map[N * nx + ny].empty()) {
-            gun_in_map[N * nx + ny].push_back(nowPlayer.gun);
-            sort(gun_in_map[N * nx + ny].begin(), gun_in_map[N * nx + ny].end());
-            playersInfo[i].gun = gun_in_map[N * nx + ny].back();
-            gun_in_map[N * nx + ny].pop_back();
-        }
-
-        //for (int g = 0; g < gun_in_map[N * nx + ny].size(); g++) {
-        //    if (nowPlayer.gun < gun_in_map[N * nx + ny][g]) {
-        //        int tmp = gun_in_map[N * nx + ny][g];
-        //        gun_in_map[N * nx + ny].erase(gun_in_map[N * nx + ny].begin() + g);
-        //        gun_in_map[N * nx + ny].push_back(nowPlayer.gun);
-        //        playersInfo[i].gun = tmp;
-        //    }
-        //}
+        gun_in_map[N * nx + ny].push_back(nowPlayer.gun);
+        sort(gun_in_map[N * nx + ny].begin(), gun_in_map[N * nx + ny].end());
+        playersInfo[i].gun = gun_in_map[N * nx + ny].back();
+        gun_in_map[N * nx + ny].pop_back();
     }
 }
 
 void moveLosePlayer(int i) {
     Info nowPlayer = playersInfo[i];
 
-    int nx = nowPlayer.x + dx[nowPlayer.d];
-    int ny = nowPlayer.y + dy[nowPlayer.d];
+    int nextD, nx, ny;
 
     for (int k = 0; k < 4; k++) {
-        if (playerMap[nx][ny] != -1 || nx < 0 || nx >= N || ny < 0 || ny >= N) {
-            nowPlayer.d = (nowPlayer.d + 1) % 4;
-            nx = nowPlayer.x + dx[nowPlayer.d];
-            ny = nowPlayer.y + dy[nowPlayer.d];
-            if (playerMap[nx][ny] == -1) break;
+        nextD = (nowPlayer.d + k) % 4;
+        nx = nowPlayer.x + dx[nextD];
+        ny = nowPlayer.y + dy[nextD];
+        if (playerMap[nx][ny] == -1 && !(nx < 0 || nx >= N || ny < 0 || ny >= N)) {
+            break;
         }
     }
 
     playersInfo[i].x = nx;
     playersInfo[i].y = ny;
-    playersInfo[i].d = nowPlayer.d;
+    playersInfo[i].d = nextD;
     playerMap[nx][ny] = i;
 }
 
@@ -82,12 +66,21 @@ void actionLosePlayer(int i) {
     getGun(i);
 }
 
-void actionWinPlayer(int i) {
+void actionWinPlayer(int i, pair<int, int> pos) {
+    Info winPlayer = playersInfo[i];
+    int nx = pos.first;
+    int ny = pos.second;
+
     // 총 내려놓고 획득
     getGun(i);
+
+    // 칸 확정
+    playersInfo[i].x = nx;
+    playersInfo[i].y = ny;
+    playerMap[nx][ny] = i;
 }
 
-void fightPlayers(int a, int b) {
+void fightPlayers(int a, int b, pair<int, int> pos) {
     int initpowerA = playersInfo[a].initpower;
     int initpowerB = playersInfo[b].initpower;
     int powerA = playersInfo[a].initpower + playersInfo[a].gun;
@@ -114,41 +107,44 @@ void fightPlayers(int a, int b) {
     }
 
     // 경험치 획득
-    playersInfo[winPlayer].point = playersInfo[winPlayer].point + abs(powerA - powerB);
-    playerMap[playersInfo[winPlayer].x][playersInfo[winPlayer].y] = winPlayer;
+    playersInfo[winPlayer].point += abs(powerA - powerB);
 
     // 진 플레이어
     actionLosePlayer(losePlayer);
 
     // 이긴 플레이어
-    actionWinPlayer(winPlayer);
+    actionWinPlayer(winPlayer, pos);
 }
 
 void movePlayer(int i) {
     Info nowPlayer = playersInfo[i];
+    playerMap[nowPlayer.x][nowPlayer.y] = -1;
 
+    int nextD = nowPlayer.d;
     int nx = nowPlayer.x + dx[nowPlayer.d];
     int ny = nowPlayer.y + dy[nowPlayer.d];
 
     if (nx < 0 || nx >= N || ny < 0 || ny >= N) {
-        nowPlayer.d = (nowPlayer.d + 2) % 4;
-        nx = nowPlayer.x + dx[nowPlayer.d];
-        ny = nowPlayer.y + dy[nowPlayer.d];
+        nextD = (nowPlayer.d + 2) % 4;
+        nx = nowPlayer.x + dx[nextD];
+        ny = nowPlayer.y + dy[nextD];
     }
 
-    playerMap[playersInfo[i].x][playersInfo[i].y] = -1;
     playersInfo[i].x = nx;
     playersInfo[i].y = ny;
-    playersInfo[i].d = nowPlayer.d;
+    playersInfo[i].d = nextD;
 
     if (playerMap[nx][ny] == -1) {
         playerMap[nx][ny] = i;
         getGun(i);
     }
     else {
-        fightPlayers(i, playerMap[nx][ny]);
+        int personinmap = playerMap[nx][ny];
+        playerMap[nx][ny] = -1;
+        fightPlayers(i, personinmap, {nx, ny});
     }
 }
+
 int main() {
     ios::sync_with_stdio(NULL);
     cin.tie(NULL); cout.tie(NULL);
@@ -173,7 +169,7 @@ int main() {
         cin >> x >> y >> d >> s;
         x--;
         y--;
-        playersInfo.push_back({ x, y, d, s, 0, false, 0 });
+        playersInfo.push_back({ x, y, d, s, 0, 0 });
         playerMap[x][y] = i;
     }
 
