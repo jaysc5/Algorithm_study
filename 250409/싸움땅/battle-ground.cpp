@@ -15,10 +15,7 @@ int dx[4] = { -1,0,1,0 };
 int dy[4] = { 0,1,0,-1 };
 
 int N, M, K;
-//int gunMap[20][20]; // 0(없음) 1(있음)
-vector<vector<int>> gun_in_map;
-//vector<vector<int>> player_in_map;
-
+vector<int> gun_in_map[20][20];
 int playerMap[20][20]; // -1(없음) 0~M-1 player index
 vector<Info> playersInfo;
 
@@ -27,11 +24,11 @@ void getGun(int i) {
     int nx = nowPlayer.x;
     int ny = nowPlayer.y;
 
-    if (gun_in_map[nx * N + ny].size() > 0) {
-        gun_in_map[N * nx + ny].push_back(nowPlayer.gun);
-        sort(gun_in_map[N * nx + ny].begin(), gun_in_map[N * nx + ny].end());
-        playersInfo[i].gun = gun_in_map[N * nx + ny].back();
-        gun_in_map[N * nx + ny].pop_back();
+    if (gun_in_map[nx][ny].size() > 0) {
+        gun_in_map[nx][ny].push_back(nowPlayer.gun);
+        sort(gun_in_map[nx][ny].begin(), gun_in_map[nx][ny].end());
+        playersInfo[i].gun = gun_in_map[nx][ny].back();
+        gun_in_map[nx][ny].pop_back();
     }
 }
 
@@ -62,7 +59,7 @@ void actionLosePlayer(int i) {
     int ny = losePlayer.y;
 
     // 총 내려 놓기
-    gun_in_map[N * nx + ny].push_back(losePlayer.gun);
+    gun_in_map[nx][ny].push_back(losePlayer.gun);
     playersInfo[i].gun = 0;
 
     // 이동
@@ -146,7 +143,6 @@ int main() {
 
     cin >> N >> M >> K;
 
-    gun_in_map.resize(N * N, vector<int>(0));
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             playerMap[i][j] = -1;
@@ -154,7 +150,7 @@ int main() {
             int tmp;
             cin >> tmp;
             if (tmp != 0) {
-                gun_in_map[N * i + j].push_back(tmp);
+                gun_in_map[i][j].push_back(tmp);
             }
         }
     }
