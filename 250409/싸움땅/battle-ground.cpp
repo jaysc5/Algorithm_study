@@ -15,7 +15,10 @@ int dx[4] = { -1,0,1,0 };
 int dy[4] = { 0,1,0,-1 };
 
 int N, M, K;
+//int gunMap[20][20]; // 0(없음) 1(있음)
 vector<vector<int>> gun_in_map;
+//vector<vector<int>> player_in_map;
+
 int playerMap[20][20]; // -1(없음) 0~M-1 player index
 vector<Info> playersInfo;
 
@@ -46,6 +49,7 @@ void moveLosePlayer(int i) {
         }
     }
 
+
     playersInfo[i].x = nx;
     playersInfo[i].y = ny;
     playersInfo[i].d = nextD;
@@ -66,21 +70,12 @@ void actionLosePlayer(int i) {
     getGun(i);
 }
 
-void actionWinPlayer(int i, pair<int, int> pos) {
-    Info winPlayer = playersInfo[i];
-    int nx = pos.first;
-    int ny = pos.second;
-
+void actionWinPlayer(int i) {
     // 총 내려놓고 획득
     getGun(i);
-
-    // 칸 확정
-    playersInfo[i].x = nx;
-    playersInfo[i].y = ny;
-    playerMap[nx][ny] = i;
 }
 
-void fightPlayers(int a, int b, pair<int, int> pos) {
+void fightPlayers(int a, int b) {
     int initpowerA = playersInfo[a].initpower;
     int initpowerB = playersInfo[b].initpower;
     int powerA = playersInfo[a].initpower + playersInfo[a].gun;
@@ -96,7 +91,7 @@ void fightPlayers(int a, int b, pair<int, int> pos) {
         losePlayer = b;
     }
     else {
-        if(initpowerA < initpowerB) {
+        if (initpowerA < initpowerB) {
             winPlayer = b;
             losePlayer = a;
         }
@@ -108,12 +103,13 @@ void fightPlayers(int a, int b, pair<int, int> pos) {
 
     // 경험치 획득
     playersInfo[winPlayer].point += abs(powerA - powerB);
+    playerMap[playersInfo[winPlayer].x][playersInfo[winPlayer].y] = winPlayer;
 
     // 진 플레이어
     actionLosePlayer(losePlayer);
 
     // 이긴 플레이어
-    actionWinPlayer(winPlayer, pos);
+    actionWinPlayer(winPlayer);
 }
 
 void movePlayer(int i) {
@@ -141,10 +137,9 @@ void movePlayer(int i) {
     else {
         int personinmap = playerMap[nx][ny];
         playerMap[nx][ny] = -1;
-        fightPlayers(i, personinmap, {nx, ny});
+        fightPlayers(i, personinmap);
     }
 }
-
 int main() {
     ios::sync_with_stdio(NULL);
     cin.tie(NULL); cout.tie(NULL);
@@ -155,7 +150,7 @@ int main() {
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             playerMap[i][j] = -1;
-            
+
             int tmp;
             cin >> tmp;
             if (tmp != 0) {
@@ -175,7 +170,7 @@ int main() {
 
     while (K--) {
         for (int i = 0; i < M; i++) {
-            movePlayer(i);      
+            movePlayer(i);
         }
     }
 
