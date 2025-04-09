@@ -124,9 +124,11 @@ void DoubleLinkedList::deleteSometoTail(Node* node) {
     while (node->next != tail) {
         Node* remove = deleteTail();
         insertHead(remove->id, remove->weight);
+        delete remove;
     }
     Node* remove = deleteTail();
     insertHead(remove->id, remove->weight);
+    delete remove;
 }
 
 Node* DoubleLinkedList::FindById(int id) {
@@ -171,6 +173,7 @@ int main() {
         cin >> querytype;
 
         if (querytype == 100) {
+            gift.clear();
             // 공장 설립
             cin >> N >> M;
 
@@ -276,6 +279,7 @@ int main() {
                         while (giftBox[b_num].size != 0) {
                             Node* down = giftBox[b_num].deleteHead();;
                             giftBox[m].insertTail(down->id, down->weight);
+                            delete down;
                         }
                         break;
                     }
@@ -286,9 +290,9 @@ int main() {
             else cout << -1 << "\n";
         }
 
-        //for (int m = 0; m < M; m++) {
-        //    giftBox[m].printAll();
-        //}
+        for (int m = 0; m < M; m++) {
+            giftBox[m].printAll();
+        }
     }
     return 0;
 }
