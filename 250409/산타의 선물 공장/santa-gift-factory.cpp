@@ -290,9 +290,9 @@ int main() {
             else cout << -1 << "\n";
         }
 
-        for (int m = 0; m < M; m++) {
-            giftBox[m].printAll();
-        }
+        //for (int m = 0; m < M; m++) {
+        //    giftBox[m].printAll();
+        //}
     }
     return 0;
 }
