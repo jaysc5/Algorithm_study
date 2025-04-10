@@ -52,7 +52,6 @@ long long point[2001];
 bool kturncheck[2001];
 Coord nowCoord[2001];
 int jumpCount[2001];
-long long total_sum;
 
 bool isRange(int x, int y) {
     return 0 < x && x <= N && 0 < y && y <= M;
@@ -61,12 +60,44 @@ bool isRange(int x, int y) {
 void initRace() {
     cin >> N >> M >> P;
     for (int i = 0; i < P; i++) {
-        cin >> id[i] >> dist[i];
+        int pid, d;
+        cin >> pid >> d;
 
-        id_to_index[id[i]] = i;
+        id_to_index[pid] = i;
+        id[i] = pid;
+        dist[i] = d;
+        point[i] = 0;
+        kturncheck[i] = false;
         nowCoord[i] = { 1,1 };
+        jumpCount[i] = 0;
     }
 }
+
+// d 방향으로 거리 dist만큼 이동 후 최종 위치 반환
+Coord getNextPosition(int x, int y, int d, int dist) {
+    int len = (d % 2 == 0) ? M : N; // 좌우면 열 M, 상하면 행 N
+    int pos = (d % 2 == 0) ? y : x;
+
+    int move = dist;
+    int cur = pos;
+    int dir = (d == 1 || d == 0) ? 1 : -1; // 우 또는 하: +1, 좌 또는 상: -1
+
+    // 거리를 이동한 후 위치 계산 (1 ~ len 사이에서 반사 이동)
+    int total = (len - 1) * 2;
+    move %= total;
+
+    for (int i = 0; i < move; i++) {
+        cur += dir;
+        if (cur < 1 || cur > len) {
+            dir *= -1;
+            cur += 2 * dir;
+        }
+    }
+
+    if (d % 2 == 0) return { x, cur }; // 좌우 이동
+    else return { cur, y };            // 상하 이동
+}
+
 
 void startRace() {
     int k, s;
@@ -76,8 +107,8 @@ void startRace() {
 
     for (int i = 0; i < P; i++) {
         race.push({ id[i], nowCoord[i].x, nowCoord[i].y, jumpCount[i] });
-        kturncheck[i] = false;
     }
+
 
     while (k--) {
         Rabbit move = race.top();
@@ -89,21 +120,7 @@ void startRace() {
         Coord nowMove = { 0, 0 };
 
         for (int i = 0; i < 4; i++) {
-            int nx = move.x;
-            int ny = move.y;
-            int nd = i;
-            for (int j = 0; j < dist[idx]; j++) {
-                nx += dx[nd];
-                ny += dy[nd];
-
-                if (!isRange(nx, ny)) {
-                    nd = (nd + 2) % 4;
-                    nx += 2 * dx[nd];
-                    ny += 2 * dy[nd];
-                }
-            }
-
-            Coord cand = { nx, ny };
+            Coord cand = getNextPosition(move.x, move.y, i, dist[idx]);
             if (Coord::cmp()(nowMove, cand)) {
                 nowMove = cand;
             }
@@ -114,8 +131,12 @@ void startRace() {
         move.jumpcount++;
         race.push(move);
 
-        total_sum += nowMove.x + nowMove.y;
-        point[idx] -= nowMove.x + nowMove.y;
+        long long addScore = nowMove.x + nowMove.y;
+        for (int i = 0; i < P; i++) {
+            if (idx != i) {
+                point[i] += addScore;
+            }
+        }
     }
 
     Rabbit kturnbest = { 0, 0, 0, 0 };
@@ -147,7 +168,7 @@ void bestRabbit() {
     long long maxPoint = 0;
 
     for (int i = 0; i < P; i++) {
-        maxPoint = max(maxPoint, total_sum + point[i]);
+        maxPoint = max(maxPoint, point[i]);
     }
 
     cout << maxPoint;
