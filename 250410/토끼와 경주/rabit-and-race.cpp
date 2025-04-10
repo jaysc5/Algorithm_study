@@ -31,15 +31,14 @@ struct Rabbit {
             return a.pid > b.pid;
         }
     };
+};
 
-    struct cmpK {
-        bool operator()(Rabbit a, Rabbit b) const {
-            if ((a.x + a.y) != (b.x + b.y)) return (a.x + a.y) < (b.x + b.y);
-            if (a.x != b.x) return a.x < b.x;
-            if (a.y != b.y) return a.y < b.y;
-            return a.pid < b.pid;
-        }
-    };
+
+bool cmp(Rabbit a, Rabbit b) {
+        if ((a.x + a.y) != (b.x + b.y)) return (a.x + a.y) < (b.x + b.y);
+        if (a.x != b.x) return a.x < b.x;
+        if (a.y != b.y) return a.y < b.y;
+        return a.pid < b.pid;
 };
 
 int dx[4] = { 0,1,0,-1 };
@@ -80,7 +79,6 @@ void startRace() {
 
     priority_queue<Rabbit, vector<Rabbit>, Rabbit::cmpRace> race;
     priority_queue<Coord, vector<Coord>, Coord::cmp> turnmove;
-    priority_queue<Rabbit, vector<Rabbit>, Rabbit::cmpK> kturn;
 
     for (int i = 0; i < P; i++) {
         race.push({ id[i], nowCoord[i].x, nowCoord[i].y, jumpCount[i] });
@@ -124,24 +122,23 @@ void startRace() {
         }
     }
 
+    Rabbit kturnbest;
+    kturnbest.x = 0;
+    kturnbest.y = 0;
+    kturnbest.pid = 0;
+
     while (!race.empty()) {
         Rabbit now = race.top();
         race.pop();
 
         nowCoord[id_to_index[now.pid]] = { now.x, now.y };
         jumpCount[id_to_index[now.pid]] = now.jumpcount;
-        kturn.push(now);
+
+        if (kturncheck[id_to_index[now.pid]] == false) continue;
+
+        if (cmp(kturnbest, now)) kturnbest = now;
     }
-
-    while (!kturn.empty()) {
-        Rabbit kturnbest = kturn.top();
-        kturn.pop();
-
-        if (kturncheck[id_to_index[kturnbest.pid]] == false) continue;
-
-        point[id_to_index[kturnbest.pid]] += s;
-        break;
-    }
+    point[id_to_index[kturnbest.pid]] += s;
 }
 
 void changeDistance() {
