@@ -52,6 +52,7 @@ long long point[2001];
 bool kturncheck[2001];
 Coord nowCoord[2001];
 int jumpCount[2001];
+long long total_sum;
 
 bool isRange(int x, int y) {
     return 0 < x && x <= N && 0 < y && y <= M;
@@ -60,16 +61,10 @@ bool isRange(int x, int y) {
 void initRace() {
     cin >> N >> M >> P;
     for (int i = 0; i < P; i++) {
-        int pid, d;
-        cin >> pid >> d;
+        cin >> id[i] >> dist[i];
 
-        id_to_index[pid] = i;
-        id[i] = pid;
-        dist[i] = d;
-        point[i] = 0;
-        kturncheck[i] = false;
+        id_to_index[id[i]] = i;
         nowCoord[i] = { 1,1 };
-        jumpCount[i] = 0;
     }
 }
 
@@ -81,8 +76,8 @@ void startRace() {
 
     for (int i = 0; i < P; i++) {
         race.push({ id[i], nowCoord[i].x, nowCoord[i].y, jumpCount[i] });
+        kturncheck[i] = false;
     }
-
 
     while (k--) {
         Rabbit move = race.top();
@@ -119,12 +114,8 @@ void startRace() {
         move.jumpcount++;
         race.push(move);
 
-        long long addScore = nowMove.x + nowMove.y;
-        for (int i = 0; i < P; i++) {
-            if (idx != i) {
-                point[i] += addScore;
-            }
-        }
+        total_sum += nowMove.x + nowMove.y;
+        point[idx] -= nowMove.x + nowMove.y;
     }
 
     Rabbit kturnbest = { 0, 0, 0, 0 };
@@ -156,7 +147,7 @@ void bestRabbit() {
     long long maxPoint = 0;
 
     for (int i = 0; i < P; i++) {
-        maxPoint = max(maxPoint, point[i]);
+        maxPoint = max(maxPoint, total_sum + point[i]);
     }
 
     cout << maxPoint;
