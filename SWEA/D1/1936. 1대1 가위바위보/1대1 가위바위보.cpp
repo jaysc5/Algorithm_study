@@ -1,16 +1,10 @@
-#include<iostream>
-using namespace std;
+a, b = input().split()
+if a < b:
+	if a == 1 and b == 3:
+		print('A')
+	print('B')
+else:
+	if a == 3 and b == 1:
+		print('B')
+	print('A')
 
-int main(int argc, char** argv)
-{
-  int A, B;
-    cin >> A >> B;
-
-    if (B-A==1 or B-A==-2){
-        cout << "B" << endl;
-    }
-    else {
-        cout << "A" << endl;
-    }
-	return 0;
-}
