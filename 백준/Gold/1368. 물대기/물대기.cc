@@ -36,6 +36,7 @@ void Union(int A, int B) {
 int main() {
 	ios::sync_with_stdio(false);
 	cin.tie(NULL);
+	cout.tie(NULL);
 
 	cin >> N;
 
@@ -50,7 +51,7 @@ int main() {
 			int cost;
 			cin >> cost;
 
-			if (i == j) continue;
+			if (i <= j) continue;
 			edges.push_back({ i, j, cost });
 		}
 	}
